@@ -12,7 +12,7 @@ RUN if [ -f package-lock.json ]; then npm ci; elif [ -f yarn.lock ]; then yarn i
 COPY . ./
 RUN if [ -f package.json ]; then npm run build; fi
 
-FROM php:8.2-apache
+FROM php:8.5-apache
 WORKDIR /var/www/html
 RUN apt-get update && apt-get install -y git unzip libpng-dev libjpeg62-turbo-dev libfreetype6-dev libzip-dev libsqlite3-dev libonig-dev && rm -rf /var/lib/apt/lists/*
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install pdo_mysql pdo_sqlite bcmath exif mbstring gd zip

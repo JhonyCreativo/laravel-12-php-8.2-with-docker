@@ -41,7 +41,7 @@
 ## Qué se configuró
 
 - Dockerfile:
-  - Imagen base `php:8.2-apache` con extensiones `pdo_mysql`, `pdo_sqlite`, `mbstring`, `bcmath`, `exif`, `gd`, `zip`.
+  - Imagen base `php:8.5-apache` con extensiones `pdo_mysql`, `pdo_sqlite`, `mbstring`, `bcmath`, `exif`, `gd`, `zip`.
   - Fix de `mbstring` instalando `libonig-dev`.
   - `DocumentRoot` apuntando a `public` y `AllowOverride All` para `public/.htaccess`.
   - Etapas para `composer` y `assets` (Vite) y `composer` disponible en el contenedor final.
@@ -129,3 +129,21 @@
   - Compose moderno ignora `version: "3.8"`. Puede removerse.
 - Permisos de `storage` y `bootstrap/cache`:
   - La imagen ajusta `chown` y `chmod`. Si montas desde host, asegúrate de no restringir permisos.
+
+## Upgrade a PHP 8.5
+
+- Cambios aplicados:
+  - `Dockerfile`: base `php:8.5-apache`.
+  - `composer.json`: `"php": "^8.5"`.
+- Reconstruir y verificar:
+  - `docker compose up -d --build app`
+  - `docker exec laravel-app php -v` (debe mostrar `PHP 8.5.x`)
+- Actualizar dependencias con Composer:
+  - `docker exec laravel-app composer update --no-dev --prefer-dist --no-interaction`
+- Consideraciones:
+  - Asegura que tu entorno de despliegue soporte PHP 8.5.
+  - Si montas el proyecto completo como volumen, reinstala `vendor` en el contenedor:
+    - `docker exec laravel-app composer install --no-dev --prefer-dist --no-interaction`
+
+## Acceder al contenedor
+- `docker exec -it laravel-app /bin/sh`
